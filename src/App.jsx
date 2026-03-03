@@ -16,12 +16,12 @@ const App = () => {
   const [showPromo, setShowPromo] = useState(false);
 
   // Trigger the Pop-Up 2 seconds after loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowPromo(true);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setShowPromo(false); // set to true to activaate
+  //   }, 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
