@@ -69,7 +69,8 @@ const App = () => {
   const navLinks = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
-    { id: 'magic-school', label: 'Magic School' },
+    { id: 'san-diego-shows', label: 'San Diego Shows' },
+    { id: 'watch-and-learn', label: 'Watch & Learn' },
     { id: 'fundraising', label: 'Fundraising' },
     { id: 'contact', label: 'Contact' }
   ];
@@ -235,16 +236,13 @@ const App = () => {
             <div style={{ flex: '1 1 400px', minWidth: '300px' }}>
               <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFFFFF' }}>About</h2>
               <p style={{ fontSize: '1.125rem', lineHeight: '1.75', marginBottom: '1.5rem', color: '#D1D5DB' }}>
-                Anjo "Tony" Sanchez is a professional magician for hire in San Diego, CA.
-                His love for magic started at the young age of 14. He was a Jr. Member of
-                the Magic Castle and when he turned 21 became a performing magician member
-                of the Magic Castle in Hollywood, CA.
+                Anjo "Tony" Sanchez is a professional magician based in San Diego, CA. His love for magic started at the young age of 14. He has performed at the world famous Magic Castle in Hollywood, CA, where he humbly began as a Junior Member and proudly continues his tenure as a performing Magician Member.
               </p>
-              <p style={{ fontSize: '1.125rem', lineHeight: '1.75', marginBottom: '2rem', color: '#D1D5DB' }}>
-                Anjo believes that magic is a catalyst that brings people together to enjoy
-                a magical social experience. With the current global conditions virtual magic
-                shows became a necessity. Anjo quickly realized the power of this new medium
-                to bring more inclusion, equality and joy to the world.
+              <p style={{ fontSize: '1.125rem', lineHeight: '1.75', marginBottom: '1.5rem', color: '#D1D5DB' }}>
+                Anjo believes that magic is a catalyst for bringing people together to enjoy a unique, magical social experience, and he works to build community through magic at every event.
+              </p>
+              <p style={{ fontSize: '1.25rem', lineHeight: '1.75', marginBottom: '2rem', color: '#EAB308', fontWeight: 'bold' }}>
+                Let Anjo make your next event one to remember.
               </p>
               <button
                 onClick={() => scrollToSection('contact')}
@@ -261,55 +259,118 @@ const App = () => {
         </div>
       </section>
 
-      {/* Watch & Learn Section */}
-      <section id="magic-school" style={{ padding: '6rem 1.5rem', backgroundImage: 'url(/images/magic-school-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(35, 33, 33, 0.85)' }}></div>
-        <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem', color: '#FFFFFF' }}>Watch & Learn</h2>
-            <p style={{ fontSize: '1.5rem', color: '#D1D5DB' }}>Unlock the timeless art of magic</p>
+      {/* San Diego Magic Shows Section */}
+      <section id="san-diego-shows" style={{ padding: '6rem 1.5rem', backgroundColor: '#1a1a1a', borderTop: '1px solid #333' }}>
+        <div style={{ maxWidth: '1152px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', color: '#FFFFFF', marginBottom: '1rem' }}>
+              San Diego Magic Shows
+            </h2>
+            <p style={{ fontSize: '1.25rem', color: '#EAB308', maxWidth: '800px', margin: '0 auto', fontWeight: '500' }}>
+              Anjo and the Amaze and Wonder team is bringing magic to San Diego's best breweries and distilleries.
+            </p>
           </div>
 
-          <div className="responsive-row" style={{ alignItems: 'flex-start' }}>
-            <div style={{ flex: '1 1 400px', minWidth: '300px' }}>
-              <h3 className="abril-fatface" style={{ fontSize: '2.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#D4AF37' }}>MAGIC 101</h3>
-              <p style={{ fontSize: '1.25rem', lineHeight: '1.75', marginBottom: '1.5rem', color: '#D1D5DB' }}>
-                A beginner's course in the art of astonishment with Instructor <strong>Anjo Sanchez</strong>, Magician and educator.
-              </p>
-              <p style={{ fontSize: '1.125rem', lineHeight: '1.75', marginBottom: '2rem', color: '#9CA3AF' }}>
-                Unlock the timeless art of magic through a step-by-step course designed to gain the confidence of a true magician.
-              </p>
-              <button
-                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdh3jITlDhyaJVa3hsMfWeYrfqFs9kNKSemVrhRgfZP6vK8bg/viewform', '_blank')}
-                className="gold-button"
-                style={{ padding: '0.75rem 2rem', borderRadius: '0.5rem', fontSize: '1rem', fontWeight: 'bold', marginBottom: '3rem' }}
-              >
-                Enroll in Magic 101
-              </button>
+          <p style={{ fontSize: '1.125rem', lineHeight: '1.75', color: '#D1D5DB', textAlign: 'center', maxWidth: '900px', margin: '0 auto 3rem' }}>
+            Grab a drink and get ready to be amazed. Our intimate pop-up magic shows feature local magicians, who perform sleight of hand and mind-bending magic in the region's favorite tasting rooms. Each show is a small, seated experience - no big stages, just skilled magic happening right in front of you.
+          </p>
 
-              <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '2px solid #444' }}>
-                <h3 className="abril-fatface" style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem', color: '#D4AF37' }}>Expand Your Magical Journey</h3>
-                <p style={{ fontSize: '1rem', lineHeight: '1.75', marginBottom: '1.5rem', color: '#D1D5DB' }}>
-                  Anjo also offers <strong style={{ color: '#FFFFFF' }}>Private Magic Lessons</strong> and <strong style={{ color: '#FFFFFF' }}>Magic Lessons for Team Building Events</strong>.
+          {/* Placeholder Grid for 3-4 Photos */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
+            {/* Image 1 */}
+            <img
+              src="/images/sd-magic-show-01.jpg"
+              alt="San Diego pop-up magic show"
+              style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            />
+
+            {/* Image 2 */}
+            <img
+              src="/images/sd-magic-show-02.jpg"
+              alt="Magic performance at a local brewery"
+              style={{ width: '100%', height: '220px', objectFit: 'cover', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+            />
+
+            {/* Remaining Placeholders */}
+            {/* <div style={{ backgroundColor: '#333', height: '220px', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>Image 3 Placeholder</div> */}
+            {/* <div style={{ backgroundColor: '#333', height: '220px', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>Image 4 Placeholder</div> */}
+          </div>
+
+          {/* Call to Action */}
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <button
+              onClick={() => window.open('https://amazeandwonder.eventbrite.com', '_blank')}
+              className="gold-button"
+              style={{ padding: '1rem 2.5rem', borderRadius: '9999px', fontSize: '1.125rem', fontWeight: 'bold' }}
+            >
+              Check out our events
+            </button>
+          </div>
+
+          {/* What to Expect Subsection */}
+          <div style={{ backgroundColor: '#232121', padding: '2.5rem', borderRadius: '0.75rem', border: '1px solid #333' }}>
+            <h3 className="forum" style={{ fontSize: '2rem', color: '#EAB308', marginBottom: '1.5rem', textAlign: 'center' }}>
+              What to Expect
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              <div>
+                <h4 style={{ fontSize: '1.25rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 'bold' }}>✨ Magical experience</h4>
+                <p style={{ color: '#D1D5DB', lineHeight: '1.6' }}>
+                  Perfect for date nights, birthdays, group outings, locals looking for a fun night out.
                 </p>
-                <button
-                  onClick={() => scrollToSection('contact')}
-                  className="gold-button"
-                  style={{ padding: '0.75rem 2rem', borderRadius: '0.5rem', fontSize: '1rem', fontWeight: 'bold' }}
-                >
-                  Learn More
-                </button>
+              </div>
+              <div>
+                <h4 style={{ fontSize: '1.25rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 'bold' }}>🍹 Amazing drinks</h4>
+                <p style={{ color: '#D1D5DB', lineHeight: '1.6' }}>
+                  Check out locally crafted brews and cocktails from the venue's tasting rooms. Some venues also showcase local food trucks and vendors onsite, but feel free to also bring your own.
+                </p>
               </div>
             </div>
-
-            <div style={{ flex: '1 1 400px', minWidth: '300px' }}>
-              <img
-                src="/images/magic101-flyer.png"
-                alt="Magic 101 Flyer"
-                style={{ width: '100%', maxWidth: '450px', height: 'auto', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
-              />
-            </div>
           </div>
+
+        </div>
+      </section>
+
+      {/* Watch & Learn Section */}
+      <section id="watch-and-learn" style={{ padding: '6rem 1.5rem', backgroundImage: 'url(/images/magic-school-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(35, 33, 33, 0.85)' }}></div>
+        <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 10, textAlign: 'center' }}>
+          <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem', color: '#FFFFFF' }}>Watch & Learn</h2>
+          <p style={{ fontSize: '1.5rem', color: '#D1D5DB', marginBottom: '3rem' }}>Unlock the timeless art of magic</p>
+
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.5)', padding: '3rem 2rem', borderRadius: '1rem', border: '1px solid #444' }}>
+            <h3 className="abril-fatface" style={{ fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#D4AF37' }}>
+              Expand Your Magical Journey
+            </h3>
+            <p style={{ fontSize: '1.25rem', lineHeight: '1.75', marginBottom: '2rem', color: '#D1D5DB' }}>
+              Anjo also offers customized magic lessons for both <strong style={{ color: '#FFFFFF' }}>private</strong> and <strong style={{ color: '#FFFFFF' }}>team-building events</strong>.
+            </p>
+            <button
+              onClick={() => scrollToSection('contact')}
+              className="gold-button"
+              style={{ padding: '0.75rem 2.5rem', borderRadius: '0.5rem', fontSize: '1.125rem', fontWeight: 'bold' }}
+            >
+              Learn More
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Fundraising Section */}
+      <section id="fundraising" style={{ padding: '6rem 1.5rem', minHeight: '500px', backgroundImage: 'url(/images/fundraising-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)' }}></div>
+        <div style={{ maxWidth: '1152px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
+          <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFFFFF' }}>Fundraising <span style={{ color: '#EAB308' }}>Magic</span></h2>
+          <p style={{ fontSize: '1.25rem', maxWidth: '768px', margin: '0 auto 2rem', color: '#E5E7EB' }}>
+            Let Anjo create an unforgettable magical experience that delights your guests and helps your organization exceed its fundraising goals.
+          </p>
+          <button
+            onClick={() => scrollToSection('contact')}
+            className="gold-button"
+            style={{ padding: '1rem 2.5rem', borderRadius: '0.375rem', fontSize: '1.125rem', fontWeight: 'bold' }}
+          >
+            Find Out More
+          </button>
         </div>
       </section>
 
@@ -335,24 +396,6 @@ const App = () => {
               View More on Instagram
             </a>
           </div>
-        </div>
-      </section>
-
-      {/* Fundraising Section */}
-      <section id="fundraising" style={{ padding: '6rem 1.5rem', minHeight: '500px', backgroundImage: 'url(/images/fundraising-bg.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', position: 'relative' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)' }}></div>
-        <div style={{ maxWidth: '1152px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 10 }}>
-          <h2 className="forum" style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFFFFF' }}>Fundraising <span style={{ color: '#EAB308' }}>Magic</span></h2>
-          <p style={{ fontSize: '1.25rem', maxWidth: '768px', margin: '0 auto 2rem', color: '#E5E7EB' }}>
-            Virtual Magic show designed to help your organization or non-profit accomplish and reach your fundraising goals
-          </p>
-          <button
-            onClick={() => scrollToSection('contact')}
-            className="gold-button"
-            style={{ padding: '1rem 2.5rem', borderRadius: '0.375rem', fontSize: '1.125rem', fontWeight: 'bold' }}
-          >
-            Find Out More
-          </button>
         </div>
       </section>
 
@@ -456,19 +499,19 @@ const App = () => {
               <h3 className="forum" style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1.5rem', color: '#FFFFFF', letterSpacing: '0.05em' }}>Services</h3>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {/* --- NEW PROMO LINK START --- */}
-                <li>
-                  <button 
+                {/* <li>
+                  <button
                     onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdh3jITlDhyaJVa3hsMfWeYrfqFs9kNKSemVrhRgfZP6vK8bg/viewform', '_blank')}
-                    style={{ 
-                      background: 'none', border: 'none', color: '#EAB308', cursor: 'pointer', 
-                      fontSize: '0.95rem', padding: 0, textAlign: 'left', fontWeight: 'bold', 
+                    style={{
+                      background: 'none', border: 'none', color: '#EAB308', cursor: 'pointer',
+                      fontSize: '0.95rem', padding: 0, textAlign: 'left', fontWeight: 'bold',
                       transition: 'all 0.2s',
-                      lineHeight: '1.5' /* Added this so the lines breathe */
+                      lineHeight: '1.5' /* Added this so the lines breathe 
                     }}
                   >
                     ★ Magic 101 - A Beginner's Course | Starts Feb 11, 2026
                   </button>
-                </li>
+                </li> */}
                 {/* --- NEW PROMO LINK END --- */}
                 <li>
                   <button
@@ -482,17 +525,17 @@ const App = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => scrollToSection('fundraising')}
+                    onClick={() => scrollToSection('san-dieg-shows')}
                     style={{ background: 'none', border: 'none', color: '#D1D5DB', cursor: 'pointer', fontSize: '0.95rem', padding: 0, textAlign: 'left', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => e.target.style.color = '#EAB308'}
                     onMouseLeave={(e) => e.target.style.color = '#D1D5DB'}
                   >
-                    Virtual Magic Shows
+                    Magic Shows
                   </button>
                 </li>
                 <li>
                   <button
-                    onClick={() => scrollToSection('magic-school')}
+                    onClick={() => scrollToSection('watch-and-learn')}
                     style={{ background: 'none', border: 'none', color: '#D1D5DB', cursor: 'pointer', fontSize: '0.95rem', padding: 0, textAlign: 'left', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => e.target.style.color = '#EAB308'}
                     onMouseLeave={(e) => e.target.style.color = '#D1D5DB'}
@@ -502,7 +545,7 @@ const App = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => scrollToSection('magic-school')}
+                    onClick={() => scrollToSection('watch-and-learn')}
                     style={{ background: 'none', border: 'none', color: '#D1D5DB', cursor: 'pointer', fontSize: '0.95rem', padding: 0, textAlign: 'left', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => e.target.style.color = '#EAB308'}
                     onMouseLeave={(e) => e.target.style.color = '#D1D5DB'}
@@ -578,7 +621,7 @@ const App = () => {
 
       {/* --- PROMOTIONAL POP-UP --- */}
       {showPromo && (
-        <div 
+        <div
           onClick={() => setShowPromo(false)} /* 1. Clicking the background closes it */
           style={{
             position: 'fixed', inset: 0, zIndex: 100,
@@ -588,18 +631,18 @@ const App = () => {
             cursor: 'pointer' /* Shows hand icon on background */
           }}
         >
-          <div 
+          <div
             onClick={(e) => e.stopPropagation()} /* 2. Clicking inside STOPS it from closing */
             style={{
-              position: 'relative', backgroundColor: '#232121', 
-              maxWidth: '500px', width: '100%', borderRadius: '1rem', 
+              position: 'relative', backgroundColor: '#232121',
+              maxWidth: '500px', width: '100%', borderRadius: '1rem',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)', overflow: 'hidden',
               border: '1px solid #444', animation: 'fadeIn 0.5s ease-out',
               cursor: 'default' /* Revert cursor to normal inside the box */
             }}
           >
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setShowPromo(false)}
               style={{
                 position: 'absolute', top: '1rem', right: '1rem',
@@ -611,9 +654,9 @@ const App = () => {
             </button>
 
             {/* Flyer Image */}
-            <img 
-              src="/images/magic101-flyer.png" 
-              alt="Magic 101 Course Flyer" 
+            <img
+              src="/images/magic101-flyer.png"
+              alt="Magic 101 Course Flyer"
               style={{ width: '100%', height: 'auto', display: 'block' }}
             />
 
@@ -623,9 +666,9 @@ const App = () => {
                 Join Magic 101!
               </h3>
               <p style={{ color: '#D1D5DB', marginBottom: '1.5rem', fontSize: '1.1rem' }}>
-                Starts Feb 11, 2026 in San Diego. <br/>Spots are limited!
+                Starts Feb 11, 2026 in San Diego. <br />Spots are limited!
               </p>
-              <button 
+              <button
                 onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSdh3jITlDhyaJVa3hsMfWeYrfqFs9kNKSemVrhRgfZP6vK8bg/viewform', '_blank')}
                 className="gold-button"
                 style={{ width: '100%', padding: '1rem', fontSize: '1.2rem', fontWeight: 'bold', borderRadius: '0.5rem' }}
