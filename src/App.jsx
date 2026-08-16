@@ -298,13 +298,16 @@ const App = () => {
 
           {/* Call to Action */}
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <button
-              onClick={() => window.open('https://amazeandwonder.eventbrite.com', '_blank')}
+            
+            <a
+              href="http://amazeandwonder.eventbrite.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="gold-button"
-              style={{ padding: '1rem 2.5rem', borderRadius: '9999px', fontSize: '1.125rem', fontWeight: 'bold' }}
+              style={{ display: 'inline-block', padding: '1rem 2.5rem', borderRadius: '9999px', fontSize: '1.125rem', fontWeight: 'bold', textDecoration: 'none' }}
             >
               Check out our events
-            </button>
+            </a>
           </div>
 
           {/* What to Expect Subsection */}
