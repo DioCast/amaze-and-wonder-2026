@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Facebook, Instagram, Twitter, ChevronDown, Mail, Send, Menu, X, ArrowUp } from 'lucide-react';
+import AIBookingIntake from './components/AIBookingIntake';
 
 const App = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -81,6 +82,10 @@ const App = () => {
   // We set Left/Right padding to 0 here so CSS can handle it
   const navPadding = isScrolled ? '0.75rem 0' : '1.5rem 0';
   const logoHeight = isScrolled ? '75px' : 'clamp(100px, 15vw, 180px)';
+
+  // Check the URL for the beta testing flag
+  const queryParams = new URLSearchParams(window.location.search);
+  const showBetaFeatures = queryParams.get("beta") === "active";
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#232121', color: '#FFFFFF' }}>
@@ -298,7 +303,7 @@ const App = () => {
 
           {/* Call to Action */}
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            
+
             <a
               href="http://amazeandwonder.eventbrite.com"
               target="_blank"
@@ -458,6 +463,9 @@ const App = () => {
           </div>
         </div>
       </section>
+
+      {/* Show Beta Features */}
+      {showBetaFeatures && <AIBookingIntake />}
 
       {/* Footer */}
       <footer style={{ padding: '4rem 1.5rem', backgroundColor: '#000000', borderTop: '1px solid #333' }}>
