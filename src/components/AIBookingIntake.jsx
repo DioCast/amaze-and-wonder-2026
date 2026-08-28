@@ -1,4 +1,16 @@
 import { useState } from 'react';
+import {
+    User,
+    Mail,
+    Phone,
+    Briefcase,
+    Tag,
+    Users,
+    Calendar,
+    Clock,
+    MapPin,
+    Building2
+} from 'lucide-react';
 
 export default function AIBookingIntake() {
     const [prompt, setPrompt] = useState("");
@@ -92,15 +104,16 @@ export default function AIBookingIntake() {
                     </h4>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem', color: '#333' }}>
-                        <div>👤 <strong>Client Name:</strong> {bookingData.clientName}</div>
-                        <div>👤 <strong>Email:</strong> {bookingData.clientEmail}</div>
-                        <div>👤 <strong>Phone Number:</strong> {bookingData.clientPhone}</div>
-                        <div>💼 <strong>Event Name:</strong> {bookingData.eventTitle}</div>
-                        <div>💼 <strong>Event Type:</strong> {bookingData.eventType}</div>
-                        <div>👥 <strong>Audience Size:</strong> {bookingData.eventSize}</div>
-                        <div>📅 <strong>Date:</strong> {bookingData.eventDate}</div>
-                        <div>📅 <strong>Time:</strong> {bookingData.eventTime}</div>
-                        <div>📅 <strong>Venue:</strong> {bookingData.eventVenue}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={18} /> <strong>Client Name:</strong> {bookingData.clientName}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={18} /> <strong>Email:</strong> {bookingData.clientEmail}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={18} /> <strong>Phone Number:</strong> {bookingData.clientPhone}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Briefcase size={18} /> <strong>Event Name:</strong> {bookingData.eventTitle}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Tag size={18} /> <strong>Event Type:</strong> {bookingData.eventType}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={18} /> <strong>Audience Size:</strong> {bookingData.eventSize}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={18} /> <strong>Date:</strong> {bookingData.eventDate}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Clock size={18} /> <strong>Time:</strong> {bookingData.eventTime}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Building2 size={18} /> <strong>Venue:</strong> {bookingData.eventVenueName}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={18} /> <strong>Address:</strong> {bookingData.eventVenueAddress}</div>
                     </div>
 
                     <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px dashed #ccc', color: '#495057', fontSize: '0.95rem' }}>
