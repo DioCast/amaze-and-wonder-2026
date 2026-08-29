@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Facebook, Instagram, Twitter, ChevronDown, Mail, Send, Menu, X, ArrowUp } from 'lucide-react';
 import AIBookingIntake from './components/AIBookingIntake';
+import EventsPipelineDashboard from './components/EventsPipelineDashboard';
 
 const App = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -83,9 +84,40 @@ const App = () => {
   const navPadding = isScrolled ? '0.75rem 0' : '1.5rem 0';
   const logoHeight = isScrolled ? '75px' : 'clamp(100px, 15vw, 180px)';
 
-  // Check the URL for the beta testing flag
+  // Check the URL for feature and admin flags
   const queryParams = new URLSearchParams(window.location.search);
-  const showBetaFeatures = queryParams.get("beta") === "active";
+  const showBetaPortal = queryParams.get("beta") === "active";
+
+  // Safely intercept the render to display the unified beta portal
+  if (showBetaPortal) {
+    return (
+      <div style={{ minHeight: '100vh', backgroundColor: '#232121', color: '#FFFFFF', paddingTop: '100px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        
+        {/* Persistent Navigation & Logo */}
+        <nav style={{ position: 'fixed', top: 0, width: '100%', zIndex: 50, backgroundColor: 'rgba(0,0,0,0.95)', padding: '0.75rem 0', borderBottom: '1px solid #333' }}>
+          <div className="nav-container">
+            <img src="/images/logo.png" alt="Amaze And Wonder" style={{ height: '75px', width: 'auto' }} />
+            <span className="forum" style={{ color: '#EAB308', fontSize: '1.25rem', fontWeight: 'bold' }}>Beta Portal</span>
+          </div>
+        </nav>
+
+        {/* Stacked Components Container */}
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+          
+          <section>
+            <h2 className="forum" style={{ fontSize: '2.5rem', color: '#FFFFFF', marginBottom: '1rem' }}>AI Intake Engine</h2>
+            <AIBookingIntake />
+          </section>
+
+          <section>
+            <h2 className="forum" style={{ fontSize: '2.5rem', color: '#FFFFFF', marginBottom: '1rem' }}>Live Pipeline</h2>
+            <EventsPipelineDashboard />
+          </section>
+
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#232121', color: '#FFFFFF' }}>
@@ -463,9 +495,6 @@ const App = () => {
           </div>
         </div>
       </section>
-
-      {/* Show Beta Features */}
-      {showBetaFeatures && <AIBookingIntake />}
 
       {/* Footer */}
       <footer style={{ padding: '4rem 1.5rem', backgroundColor: '#000000', borderTop: '1px solid #333' }}>

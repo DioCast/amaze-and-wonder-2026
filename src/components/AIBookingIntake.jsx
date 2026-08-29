@@ -56,16 +56,16 @@ export default function AIBookingIntake() {
     };
 
     return (
-        <div style={{ padding: '2rem', background: '#f8f9fa', borderRadius: '12px', border: '2px dashed #ccc', margin: '2rem auto', maxWidth: '750px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        <div style={{ padding: '2rem', background: '#1a1a1a', borderRadius: '12px', border: '2px dashed #333', margin: '2rem auto', maxWidth: '750px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
 
             {/* HEADER */}
-            <h3 style={{ marginTop: 0, color: '#2b2d42', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ marginTop: 0, color: '#EAB308', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 🧪 Beta: AI Booking Intake
             </h3>
-            <p style={{ fontSize: '1rem', color: '#333', marginBottom: '4px' }}>
+            <p style={{ fontSize: '1rem', color: '#D1D5DB', marginBottom: '4px' }}>
                 Type a natural sentence to begin the intake process.
             </p>
-            <p style={{ fontSize: '0.95rem', color: '#111', marginTop: 0, marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.95rem', color: '#D1D5DB', marginTop: 0, marginBottom: '1.5rem' }}>
                 <strong>Example:</strong> I need a corporate show for 50 people on October 31st. My name is Marie.
             </p>
 
@@ -98,12 +98,12 @@ export default function AIBookingIntake() {
 
             {/* EXTRACTED DETAILS CARD */}
             {bookingData && (
-                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#fff', borderRadius: '8px', border: '1px solid #dee2e6', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                    <h4 style={{ margin: '0 0 1rem 0', color: '#212529', fontSize: '1.2rem', borderBottom: '1px solid #eee', paddingBottom: '0.75rem' }}>
+                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#262626', borderRadius: '8px', border: '1px solid #333', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
+                    <h4 style={{ margin: '0 0 1rem 0', color: '#ffffff', fontSize: '1.2rem', borderBottom: '1px solid #444', paddingBottom: '0.75rem' }}>
                         Extracted Details
                     </h4>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem', color: '#333' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem', color: '#D1D5DB' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={18} /> <strong>Client Name:</strong> {bookingData.clientName}</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={18} /> <strong>Email:</strong> {bookingData.clientEmail}</div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={18} /> <strong>Phone Number:</strong> {bookingData.clientPhone}</div>
