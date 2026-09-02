@@ -62,8 +62,10 @@ export default function EventsPipelineDashboard() {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead style={{ backgroundColor: '#262626', borderBottom: '1px solid #333' }}>
             <tr>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Client Name</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Event Date</th>
+              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact</th>
+              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Event</th>
+              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</th>
+              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Venue</th>
               <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type</th>
               <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
             </tr>
@@ -77,11 +79,23 @@ export default function EventsPipelineDashboard() {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#333'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', fontWeight: '500', color: '#ffffff' }}>{evt.clientName}</td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF' }}>{evt.eventDate}</td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF' }}>{evt.eventType}</td>
-                <td style={{ padding: '1rem 1.5rem' }}>
-                  <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#854d0e', backgroundColor: '#fef08a', borderRadius: '9999px' }}>
+                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', fontWeight: '500', color: '#ffffff', verticalAlign: 'top' }}>
+                  {evt.clientName}
+                </td>
+                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '200px' }}>
+                  {evt.eventTitle}
+                </td>
+                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                  {evt.eventDate}
+                </td>
+                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '250px' }}>
+                  {evt.eventVenueName}
+                </td>
+                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
+                  {evt.eventType}
+                </td>
+                <td style={{ padding: '1rem 1.5rem', verticalAlign: 'top' }}>
+                  <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#854d0e', backgroundColor: '#fef08a', borderRadius: '9999px', whiteSpace: 'nowrap' }}>
                     {evt.eventStatus}
                   </span>
                 </td>
