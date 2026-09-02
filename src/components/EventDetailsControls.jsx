@@ -42,7 +42,10 @@ export default function EventDetailsControls({
                         <option value="Private">Private</option>
                         <option value="Public">Public</option>
                         <option value="Fundraiser">Fundraiser</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="School">School</option>
                         <option value="Other">Other</option>
+                        <option value="Unknown">Unknown</option>
                     </select>
                 </div>
                 <div>
