@@ -171,17 +171,47 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       <div style={{ position: 'fixed', top: 0, bottom: 0, right: 0, zIndex: 110, width: '100%', maxWidth: '28rem', backgroundColor: '#1a1a1a', boxShadow: '-10px 0 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column' }}>
 
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'between', padding: '1rem 1.5rem', borderBottom: '1px solid #333' }}>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#FFFFFF' }}>{eventData.clientName}</h2>
-            <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', marginTop: '0.25rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#854d0e', backgroundColor: '#fef08a', borderRadius: '9999px' }}>
-              {eventData.eventStatus}
-            </span>
-          </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: '1.25rem', color: '#9ca3af', cursor: 'pointer', fontWeight: 'bold' }}>
+        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #333', position: 'relative' }}>
+          {/* X Button absolute positioned in the left padding gap */}
+          <button
+            onClick={onClose}
+            style={{ position: 'absolute', left: '0.35rem', top: '1.5rem', background: 'none', border: 'none', fontSize: '1rem', color: '#9ca3af', cursor: 'pointer', fontWeight: 'bold' }}
+            className="hover:text-white"
+          >
             ✕
           </button>
+
+          {/* Name Block (flush with the 1.5rem body padding) */}
+          <div className="flex flex-col items-start w-full">
+            {/* 1st Row: Client Name */}
+            <h2 className="text-xl font-bold text-white leading-tight mb-1">
+              {eventData.clientName}
+            </h2>
+
+            {/* 2nd Row: Event Name */}
+            <div className="text-sm font-medium text-gray-300 leading-snug">
+              {eventData.eventTitle || 'Event Title TBD'}
+            </div>
+
+            {/* 3rd Row: Exact matched yellow status badge */}
+            <div style={{ marginTop: '0.35rem' }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  padding: '0.25rem 0.5rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 'bold',
+                  color: '#854d0e',
+                  backgroundColor: '#fef08a',
+                  borderRadius: '9999px'
+                }}
+              >
+                {eventData.eventStatus}
+              </span>
+            </div>
+          </div>
         </div>
+
 
         {/* Scrollable Body */}
         <div style={{ flex: 1, padding: '1rem 1.5rem', overflowY: 'auto' }}>

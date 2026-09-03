@@ -71,7 +71,7 @@ export default function FinancialControls({
               onChange={(e) => setIsDepositSatisfied(e.target.checked)}
               style={{ width: '1.25rem', height: '1.25rem', color: '#EAB308', borderRadius: '0.25rem' }}
             />
-            <span style={{ marginLeft: '0.5rem', fontSize: '0.875rem', fontWeight: 'bold', color: '#D1D5DB' }}>Deposit Cleared</span>
+            <span style={{ marginLeft: '0.5rem', fontSize: '0.875rem', fontWeight: 'bold', color: '#D1D5DB' }}>Deposit Satisfied</span>
           </label>
         </div>
 
