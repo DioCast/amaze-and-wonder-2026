@@ -5,6 +5,7 @@ import MainSite from './components/MainSite';
 import AdminLogin from './components/AdminLogin';
 import EventsPipelineDashboard from './components/EventsPipelineDashboard';
 import AIBookingIntake from './components/AIBookingIntake';
+import UpcomingEventsGrid from './components/UpcomingEventsGrid';
 
 export default function App() {
   const [user, setUser] = useState(null);
@@ -32,7 +33,7 @@ export default function App() {
           <div className="nav-container" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '0 1.5rem' }}>
             <img src="/images/logo.png" alt="Amaze And Wonder" style={{ height: '60px', width: 'auto' }} />
             <span className="forum" style={{ color: '#EAB308', fontSize: '1.5rem', fontWeight: 'bold' }}>
-              {user ? "Amaze and Wonder - Event Dashboard" : "Amaze and Wonder - Admin Login"}
+              {user ? "Amaze and Wonder - Beta Event Dashboard" : "Amaze and Wonder - Admin Login"}
             </span>
           </div>
         </nav>
@@ -40,9 +41,10 @@ export default function App() {
         {/* Security Wall */}
         <div style={{ paddingTop: '100px' }}>
           {user ? (
-            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <AIBookingIntake />
               <EventsPipelineDashboard />
+              <UpcomingEventsGrid />
             </div>
           ) : (
             <AdminLogin />

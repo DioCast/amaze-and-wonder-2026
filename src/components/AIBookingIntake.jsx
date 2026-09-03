@@ -60,7 +60,7 @@ export default function AIBookingIntake() {
 
             {/* HEADER */}
             <h3 style={{ marginTop: 0, color: '#EAB308', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                🧪 Beta: AI Booking Intake
+                🧪 Beta: AI Event Booking Intake
             </h3>
             <p style={{ fontSize: '1rem', color: '#D1D5DB', marginBottom: '4px' }}>
                 Type a natural sentence to begin the intake process.

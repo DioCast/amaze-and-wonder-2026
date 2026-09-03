@@ -8,27 +8,6 @@ export default function EventsPipelineDashboard() {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // useEffect(() => {
-  //   const mockData = [
-  //     { 
-  //       id: '1', 
-  //       clientName: 'Marie Castro', 
-  //       eventDate: '2026-11-26', 
-  //       eventType: 'Corporate', 
-  //       eventStatus: 'Pending', 
-  //       rawMessage: 'Looking for a stage magician for our annual corporate banquet.', 
-  //       audienceSize: 150, 
-  //       clientPhone: '555-0101', 
-  //       clientEmail: 'marie@example.com', 
-  //       eventQuotePrice: 1500, 
-  //       eventAgreedPrice: 0, 
-  //       eventDeposit: 500, 
-  //       isDepositSatisfied: false 
-  //     }
-  //   ];
-  //   setEvents(mockData);
-  // }, []);
-
   useEffect(() => {
     // 1. Query the 'bookings' collection, sorting by newest first
     const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
@@ -55,7 +34,7 @@ export default function EventsPipelineDashboard() {
   };
 
   return (
-    <div style={{ padding: '2rem', minHeight: '100vh', backgroundColor: 'transparent', color: '#FFFFFF' }}>
+    <div style={{ padding: '2rem', backgroundColor: 'transparent', color: '#FFFFFF' }}>
       <h1 className="forum" style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Events Pipeline</h1>
 
       <div style={{ overflowX: 'auto', backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
@@ -110,6 +89,7 @@ export default function EventsPipelineDashboard() {
         onClose={() => setIsDrawerOpen(false)}
         eventData={selectedEvent}
       />
+
     </div>
   );
 }
