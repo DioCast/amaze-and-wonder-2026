@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getAuth } from 'firebase/auth';
+// import { getAuth } from 'firebase/auth';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { db } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig';
 import ClientContactControls from './ClientContactControls';
 import EventDetailsControls from './EventDetailsControls';
 import FinancialControls from './FinancialControls';
@@ -72,12 +72,22 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       let activeUser = 'Admin';
       try {
         // Capture the Active User
-        const auth = getAuth();
         if (auth && auth.currentUser) {
-          activeUser = auth.currentUser.displayName || auth.currentUser.email || 'Admin';
+          if (auth.currentUser.displayName) {
+            activeUser = auth.currentUser.displayName;
+          } else if (auth.currentUser.email) {
+            // Isolates the prefix before the @ symbol
+            const emailPrefix = auth.currentUser.email.split('@')[0];
+
+            // Splits by periods, capitalizes each word, and joins with a space
+            activeUser = emailPrefix
+              .split('.')
+              .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+              .join(' ');
+          }
         }
       } catch (authError) {
-        console.warn("Firebase Auth not detected. Defaulting to 'Admin'.");
+        console.warn("Firebase Auth error. Defaulting to 'Admin'.");
       }
 
       // 1. Detect Changes (Change Data Capture)
@@ -102,9 +112,9 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       if (Number(depositRequired) !== (eventData.eventDeposit || 0)) changes.push(`Deposit Required to $${depositRequired}`);
       if (isDepositSatisfiedChecked !== (eventData.isDepositSatisfied || false)) changes.push(`IsDepositSatisfied to ${isDepositSatisfiedChecked}`);
       // 5. Other Details
-      if (imageURL !== (eventData.imageURL || '')) changes.push(`Image URL updated`);
-      if (ticketURL !== (eventData.ticketURL || '')) changes.push(`Ticket URL updated`);
-      if (eventOverview !== (eventData.eventOverview || '')) changes.push(`Overview updated`);
+      if (imageURL !== (eventData.imageURL || '')) changes.push(`Image URL to "${imageURL}"`);
+      if (ticketURL !== (eventData.ticketURL || '')) changes.push(`Ticket URL to "${ticketURL}"`);
+      if (eventOverview !== (eventData.eventOverview || '')) changes.push(`Overview to "${eventOverview}"`);
       // You can replicate the 'if' statement above for any other fields you want tracked strictly.
 
       // 2. Format the Final Audit String
@@ -276,9 +286,9 @@ export default function EventManager({ isOpen, onClose, eventData }) {
                 <option value="Quote Sent">Quote Sent</option>
                 <option value="Negotiating">Negotiating</option>
                 <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
                 <option value="Confirmed">Confirmed</option>
                 <option value="Completed">Completed</option>
-                <option value="Rejected">Rejected</option>
                 <option value="Canceled">Canceled</option>
               </select>
             </div>
