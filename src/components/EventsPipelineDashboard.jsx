@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
-import { db } from '../firebaseConfig'; // ⚠️ Ensure this path points to your actual Firebase init file
+import { db } from '../firebaseConfig';
 import EventManager from './EventManager';
 
 export default function EventsPipelineDashboard() {
@@ -9,24 +9,18 @@ export default function EventsPipelineDashboard() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
-    // 1. Query the 'bookings' collection, sorting by newest first
     const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
-
-    // 2. Set up the real-time listener
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const liveEvents = snapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data() // Spreads all your database fields (eventSize, eventType, etc.) directly into state
+        ...doc.data()
       }));
       setEvents(liveEvents);
     }, (error) => {
       console.error("Error fetching pipeline events: ", error);
     });
-
-    // 3. Cleanup the listener when the component unmounts
     return () => unsubscribe();
   }, []);
-
 
   const handleRowClick = (eventRecord) => {
     setSelectedEvent(eventRecord);
@@ -34,19 +28,22 @@ export default function EventsPipelineDashboard() {
   };
 
   return (
-    <div style={{ padding: '2rem', backgroundColor: 'transparent', color: '#FFFFFF' }}>
-      <h1 className="forum" style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Events Pipeline</h1>
+    <div className="w-full text-white mt-12">
+      <h2 className="forum text-3xl font-bold mb-6 border-b border-[#333] pb-3">
+        Events Pipeline
+      </h2>
 
-      <div style={{ overflowX: 'auto', backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '0.5rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-          <thead style={{ backgroundColor: '#262626', borderBottom: '1px solid #333' }}>
+      <div className="overflow-x-auto bg-[#1a1a1a] border border-[#333] rounded-lg shadow-sm">
+        {/* min-w-[800px] forces a clean horizontal scrollbar on mobile instead of squishing text */}
+        <table className="w-full text-left border-collapse min-w-[800px]">
+          <thead className="bg-[#262626] border-b border-[#333]">
             <tr>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Contact</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Event</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Venue</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Type</th>
-              <th style={{ padding: '0.75rem 1.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#D1D5DB', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Contact</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Event</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Date</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Venue</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Type</th>
+              <th className="py-3 px-6 text-xs font-bold text-gray-300 uppercase tracking-wide">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -54,27 +51,15 @@ export default function EventsPipelineDashboard() {
               <tr
                 key={evt.id}
                 onClick={() => handleRowClick(evt)}
-                style={{ cursor: 'pointer', borderBottom: '1px solid #333', transition: 'background-color 0.2s' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#333'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                className="cursor-pointer border-b border-[#333] hover:bg-[#333] transition-colors duration-200"
               >
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', fontWeight: '500', color: '#ffffff', verticalAlign: 'top' }}>
-                  {evt.clientName}
-                </td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '200px' }}>
-                  {evt.eventTitle}
-                </td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
-                  {evt.eventDate}
-                </td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', wordBreak: 'break-word', maxWidth: '250px' }}>
-                  {evt.eventVenueName}
-                </td>
-                <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#9CA3AF', verticalAlign: 'top', whiteSpace: 'nowrap' }}>
-                  {evt.eventType}
-                </td>
-                <td style={{ padding: '1rem 1.5rem', verticalAlign: 'top' }}>
-                  <span style={{ display: 'inline-block', padding: '0.25rem 0.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#854d0e', backgroundColor: '#fef08a', borderRadius: '9999px', whiteSpace: 'nowrap' }}>
+                <td className="py-4 px-6 text-sm font-medium text-white align-top">{evt.clientName}</td>
+                <td className="py-4 px-6 text-sm text-gray-400 align-top break-words max-w-[200px]">{evt.eventTitle}</td>
+                <td className="py-4 px-6 text-sm text-gray-400 align-top whitespace-nowrap">{evt.eventDate}</td>
+                <td className="py-4 px-6 text-sm text-gray-400 align-top break-words max-w-[250px]">{evt.eventVenueName}</td>
+                <td className="py-4 px-6 text-sm text-gray-400 align-top whitespace-nowrap">{evt.eventType}</td>
+                <td className="py-4 px-6 align-top">
+                  <span className="inline-block px-2 py-1 text-xs font-bold text-[#854d0e] bg-[#fef08a] rounded-full whitespace-nowrap">
                     {evt.eventStatus}
                   </span>
                 </td>
@@ -89,7 +74,6 @@ export default function EventsPipelineDashboard() {
         onClose={() => setIsDrawerOpen(false)}
         eventData={selectedEvent}
       />
-
     </div>
   );
 }

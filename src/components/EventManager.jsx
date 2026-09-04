@@ -9,6 +9,9 @@ import OtherDetailsControls from './OtherDetailsControls';
 
 export default function EventManager({ isOpen, onClose, eventData }) {
   // 1. ALL State Hooks must go here at the very top
+  // Audit History
+  const [showHistory, setShowHistory] = useState(false);
+
   // Top-Level State Hooks for ALL editable fields
   const [eventStatus, setEventStatus] = useState(eventData?.eventStatus || 'Pending');
   const [auditNote, setAuditNote] = useState('');
@@ -30,6 +33,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
   // Financial States (passed down to FinancialControls as props)
   const [quotedPrice, setQuotedPrice] = useState(eventData?.eventQuotePrice || '');
   const [agreedPrice, setAgreedPrice] = useState(eventData?.eventAgreedPrice || '');
+  const [paidBalance, setPaidBalance] = useState(eventData?.eventPaidBalance || ''); // New State
   const [depositRequired, setDepositRequired] = useState(eventData?.eventDeposit || '');
   const [isDepositSatisfiedChecked, setIsDepositSatisfied] = useState(eventData?.isDepositSatisfied || false);
 
@@ -53,17 +57,38 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       setEventVenueAddress(eventData.eventVenueAddress || '');
       setQuotedPrice(eventData.eventQuotePrice || '');
       setAgreedPrice(eventData.eventAgreedPrice || '');
+      setPaidBalance(eventData.eventPaidBalance || ''); // New Reset
       setDepositRequired(eventData.eventDeposit || '');
       setIsDepositSatisfied(eventData.isDepositSatisfied || false);
       setImageURL(eventData.imageURL || '');
       setTicketURL(eventData.ticketURL || '');
       setEventOverview(eventData.eventOverview || '');
-      setAuditNote(''); // Clears the audit note for the new record
+      // Load the draft for this specific event ID, or default to empty string
+      setAuditNote(localStorage.getItem(`auditNote_${eventData.id}`) || ''); // Clears the audit note for the new record
+      setShowHistory(false); // Forces the panel closed on new record
     }
   }, [eventData]);
 
+  useEffect(() => {
+    if (eventData?.id) {
+      if (auditNote) {
+        localStorage.setItem(`auditNote_${eventData.id}`, auditNote);
+      } else {
+        localStorage.removeItem(`auditNote_${eventData.id}`);
+      }
+    }
+  }, [auditNote, eventData]);
+
+  // Automatically resets the history panel when the modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      setShowHistory(false);
+    }
+  }, [isOpen]);
+
   // 2. Early return strictly AFTER hooks
   if (!isOpen || !eventData) return null;
+
 
   // 3. The Handler Function
   const handleSaveUpdate = async () => {
@@ -106,9 +131,23 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       if (Number(eventSize) !== (eventData.eventSize || 0)) changes.push(`Event Size to "${eventSize}"`);
       if (eventVenueName !== (eventData.eventVenueName || '')) changes.push(`Venue to "${eventVenueName}"`);
       if (eventVenueAddress !== (eventData.eventVenueAddress || '')) changes.push(`Venue Address to "${eventVenueAddress}"`);
-      // 4. Financials
+      // 4. Financials (Change Tracker)
       if (Number(quotedPrice) !== (eventData.eventQuotePrice || 0)) changes.push(`Quoted Price to $${quotedPrice}`);
       if (Number(agreedPrice) !== (eventData.eventAgreedPrice || 0)) changes.push(`Agreed Price to $${agreedPrice}`);
+
+      // Dynamic Paid Balance Tracker
+      const oldPaidBalance = eventData.eventPaidBalance || 0;
+      const newPaidBalance = Number(paidBalance) || 0;
+
+      if (newPaidBalance !== oldPaidBalance) {
+        const difference = newPaidBalance - oldPaidBalance;
+        const currentAgreedPrice = Number(agreedPrice) || 0;
+        const remainingBalance = currentAgreedPrice - newPaidBalance;
+
+        const actionVerb = difference >= 0 ? "added" : "deducted";
+        changes.push(`${actionVerb} $${Math.abs(difference)} to paid balance, new paid balance is $${newPaidBalance}, remaining balance is $${remainingBalance}`);
+      }
+
       if (Number(depositRequired) !== (eventData.eventDeposit || 0)) changes.push(`Deposit Required to $${depositRequired}`);
       if (isDepositSatisfiedChecked !== (eventData.isDepositSatisfied || false)) changes.push(`IsDepositSatisfied to ${isDepositSatisfiedChecked}`);
       // 5. Other Details
@@ -119,8 +158,8 @@ export default function EventManager({ isOpen, onClose, eventData }) {
 
       // 2. Format the Final Audit String
       const systemLog = changes.length > 0
-        ? `System: Updated ${changes.join(', ')}.`
-        : 'System: Record saved with no tracked field changes.';
+        ? `Updated ${changes.join(', ')}.`
+        : 'Record saved with no tracked changes.';
 
       const finalAuditNote = auditNote.trim()
         ? `${systemLog} | User Note: "${auditNote.trim()}"`
@@ -149,6 +188,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
         // 4. Financials
         eventQuotePrice: Number(quotedPrice),
         eventAgreedPrice: Number(agreedPrice),
+        eventPaidBalance: Number(paidBalance), // New DB Field
         eventDeposit: Number(depositRequired),
         isDepositSatisfied: isDepositSatisfiedChecked,
         // 5. Other Details
@@ -166,6 +206,8 @@ export default function EventManager({ isOpen, onClose, eventData }) {
         })
       });
 
+      localStorage.removeItem(`auditNote_${eventData.id}`);
+
       console.log("Database synced and history logged successfully.");
       onClose();
     } catch (error) {
@@ -181,18 +223,18 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       <div style={{ position: 'fixed', top: 0, bottom: 0, right: 0, zIndex: 110, width: '100%', maxWidth: '28rem', backgroundColor: '#1a1a1a', boxShadow: '-10px 0 25px rgba(0,0,0,0.5)', display: 'flex', flexDirection: 'column' }}>
 
         {/* Header */}
-        <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #333', position: 'relative' }}>
-          {/* X Button absolute positioned in the left padding gap */}
+        <div className="relative p-6 border-b border-[#333]">
+          {/* X Button (Standard Top Right Alignment) */}
           <button
             onClick={onClose}
-            style={{ position: 'absolute', left: '0.35rem', top: '1.5rem', background: 'none', border: 'none', fontSize: '1rem', color: '#9ca3af', cursor: 'pointer', fontWeight: 'bold' }}
-            className="hover:text-white"
+            className="absolute top-6 right-6 text-gray-400 hover:text-white text-xl font-bold transition-colors"
+            aria-label="Close modal"
           >
             ✕
           </button>
 
-          {/* Name Block (flush with the 1.5rem body padding) */}
-          <div className="flex flex-col items-start w-full">
+          {/* Name Block (Added pr-8 to prevent text overlap with the X button) */}
+          <div className="flex flex-col items-start w-full pr-8">
             {/* 1st Row: Client Name */}
             <h2 className="text-xl font-bold text-white leading-tight mb-1">
               {eventData.clientName}
@@ -204,69 +246,95 @@ export default function EventManager({ isOpen, onClose, eventData }) {
             </div>
 
             {/* 3rd Row: Exact matched yellow status badge */}
-            <div style={{ marginTop: '0.35rem' }}>
-              <span
-                style={{
-                  display: 'inline-block',
-                  padding: '0.25rem 0.5rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 'bold',
-                  color: '#854d0e',
-                  backgroundColor: '#fef08a',
-                  borderRadius: '9999px'
-                }}
-              >
+            <div className="mt-2.5">
+              <span className="inline-block px-2.5 py-1 text-xs font-bold text-[#854d0e] bg-[#fef08a] rounded-full">
                 {eventData.eventStatus}
               </span>
             </div>
           </div>
         </div>
 
-
         {/* Scrollable Body */}
-        <div style={{ flex: 1, padding: '1rem 1.5rem', overflowY: 'auto' }}>
+        {/* Middle Section Sandbox (Auto-fills space between header and footer) */}
+        <div className="flex-1 relative overflow-x-hidden">
 
-          {/* AI Source Block */}
-          <div style={{ padding: '1rem', marginBottom: '1.5rem', backgroundColor: '#262626', borderRadius: '0.375rem', border: '1px solid #333' }}>
-            <span style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#9CA3AF', textTransform: 'uppercase' }}>AI Intake Source</span>
-            <p style={{ fontSize: '0.875rem', color: '#D1D5DB', fontFamily: 'monospace' }}>
-              "{eventData.rawMessage}"
-            </p>
+          {/* A. The Standard Form Fields (Base Layer) */}
+          <div className="absolute inset-0 p-6 overflow-y-auto">
+            {/* AI Source Block */}
+            <div className="p-4 mb-6 bg-[#262626] rounded-md border border-[#333]">
+              <span className="block mb-2 text-xs font-bold text-gray-400 uppercase">AI Intake Source</span>
+              <p className="text-sm text-gray-300 font-mono break-words">
+                "{eventData.rawMessage}"
+              </p>
+            </div>
+
+            <ClientContactControls
+              clientName={clientName} setClientName={setClientName}
+              clientPhone={clientPhone} setClientPhone={setClientPhone}
+              clientEmail={clientEmail} setClientEmail={setClientEmail}
+              requestDate={eventData.createdAt}
+            />
+
+            <EventDetailsControls
+              eventTitle={eventTitle} setEventTitle={setEventTitle}
+              eventType={eventType} setEventType={setEventType}
+              eventDate={eventDate} setEventDate={setEventDate}
+              eventTime={eventTime} setEventTime={setEventTime}
+              eventSize={eventSize} setEventSize={setEventSize}
+              eventVenueName={eventVenueName} setEventVenueName={setEventVenueName}
+              eventVenueAddress={eventVenueAddress} setEventVenueAddress={setEventVenueAddress}
+            />
+
+            <FinancialControls
+              quotedPrice={quotedPrice} setQuotedPrice={setQuotedPrice}
+              agreedPrice={agreedPrice} setAgreedPrice={setAgreedPrice}
+              paidBalance={paidBalance} setPaidBalance={setPaidBalance}
+              depositRequired={depositRequired} setDepositRequired={setDepositRequired}
+              isDepositSatisfiedChecked={isDepositSatisfiedChecked} setIsDepositSatisfied={setIsDepositSatisfied}
+            />
+
+            <OtherDetailsControls
+              imageURL={imageURL} setImageURL={setImageURL}
+              ticketURL={ticketURL} setTicketURL={setTicketURL}
+              eventOverview={eventOverview} setEventOverview={setEventOverview}
+            />
           </div>
 
-          {/* Client Contact Controls Section */}
-          <ClientContactControls
-            clientName={clientName} setClientName={setClientName}
-            clientPhone={clientPhone} setClientPhone={setClientPhone}
-            clientEmail={clientEmail} setClientEmail={setClientEmail}
-            requestDate={eventData.createdAt}
-          />
+          {/* B. The Sliding History Panel (Top Layer) */}
+          <div
+            className={`absolute inset-0 bg-[#1a1a1a] z-50 transition-transform duration-300 ease-in-out ${showHistory ? 'translate-x-0' : '-translate-x-full'}`}
+          >
+            <div className="p-6 h-full overflow-y-auto">
+              <h3 className="text-[#EAB308] font-bold uppercase text-xs tracking-wider border-b border-[#333] pb-2 mb-4">
+                Audit History
+              </h3>
 
-          {/* Event Details Controls Section */}
-          <EventDetailsControls
-            eventTitle={eventTitle} setEventTitle={setEventTitle}
-            eventType={eventType} setEventType={setEventType}
-            eventDate={eventDate} setEventDate={setEventDate}
-            eventTime={eventTime} setEventTime={setEventTime}
-            eventSize={eventSize} setEventSize={setEventSize}
-            eventVenueName={eventVenueName} setEventVenueName={setEventVenueName}
-            eventVenueAddress={eventVenueAddress} setEventVenueAddress={setEventVenueAddress}
-          />
+              <div className="space-y-4">
+                {eventData.statusHistory && eventData.statusHistory.length > 0 ? (
+                  [...eventData.statusHistory].reverse().map((log, index) => (
+                    <div key={index} className="bg-[#262626] p-3 rounded border border-[#444]">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-bold text-gray-300">{log.user}</span>
+                        <span className="text-[10px] text-gray-500">
+                          {log.timestamp?.toDate ? log.timestamp.toDate().toLocaleString() : 'Recent'}
+                        </span>
+                      </div>
+                      <span className="inline-block px-2 py-0.5 mb-2 text-[10px] font-bold text-[#854d0e] bg-[#fef08a] rounded-full">
+                        {log.status}
+                      </span>
+                      {/* break-words and whitespace-pre-wrap force long URLs and notes to wrap properly */}
+                      <p className="text-xs text-gray-400 leading-relaxed break-words whitespace-pre-wrap">
+                        {log.note}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No history available for this record.</p>
+                )}
+              </div>
+            </div>
+          </div>
 
-          {/* Financial Controls Section */}
-          <FinancialControls
-            quotedPrice={quotedPrice} setQuotedPrice={setQuotedPrice}
-            agreedPrice={agreedPrice} setAgreedPrice={setAgreedPrice}
-            depositRequired={depositRequired} setDepositRequired={setDepositRequired}
-            isDepositSatisfiedChecked={isDepositSatisfiedChecked} setIsDepositSatisfied={setIsDepositSatisfied}
-          />
-
-          {/* Other Details Controls Section */}
-          <OtherDetailsControls
-            imageURL={imageURL} setImageURL={setImageURL}
-            ticketURL={ticketURL} setTicketURL={setTicketURL}
-            eventOverview={eventOverview} setEventOverview={setEventOverview}
-          />
         </div>
 
         {/* Sticky Footer */}
@@ -308,13 +376,22 @@ export default function EventManager({ isOpen, onClose, eventData }) {
           </div>
 
           {/* Action Buttons */}
-          <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid #333', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', backgroundColor: '#1a1a1a' }}>
-            <button onClick={onClose} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: '500', color: '#D1D5DB', backgroundColor: 'transparent', border: '1px solid #444', borderRadius: '0.25rem', cursor: 'pointer' }}>
-              Cancel
+          <div className="p-4 border-t border-[#333] flex justify-between items-center bg-[#1a1a1a]">
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-xs font-bold text-gray-400 hover:text-[#EAB308] uppercase tracking-wider transition-colors"
+            >
+              {showHistory ? 'Hide History' : 'View History'}
             </button>
-            <button onClick={handleSaveUpdate} style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: '500', color: '#000000', backgroundColor: '#EAB308', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>
-              Save & Update
-            </button>
+
+            <div className="flex gap-3">
+              <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-300 bg-transparent border border-[#444] rounded hover:bg-[#262626] transition-colors">
+                Cancel
+              </button>
+              <button onClick={handleSaveUpdate} className="px-4 py-2 text-sm font-medium text-black bg-[#EAB308] rounded hover:bg-yellow-400 transition-colors">
+                Save & Update
+              </button>
+            </div>
           </div>
         </div>
 

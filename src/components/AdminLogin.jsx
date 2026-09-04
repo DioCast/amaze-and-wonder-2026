@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, setPersistence, browserSessionPersistence } from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 
 export default function AdminLogin() {
@@ -11,6 +11,7 @@ export default function AdminLogin() {
         e.preventDefault();
         setError('');
         try {
+            await setPersistence(auth, browserSessionPersistence);
             await signInWithEmailAndPassword(auth, email, password);
         } catch (err) {
             setError('Invalid admin credentials. Please try again.');

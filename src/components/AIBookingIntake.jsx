@@ -1,24 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-    User,
-    Mail,
-    Phone,
-    Briefcase,
-    Tag,
-    Users,
-    Calendar,
-    Clock,
-    MapPin,
-    Building2
+    User, Mail, Phone, Briefcase, Tag, Users, Calendar, Clock, MapPin, Building2
 } from 'lucide-react';
 
 export default function AIBookingIntake() {
-    const [prompt, setPrompt] = useState("");
+    const [prompt, setPrompt] = useState(() => localStorage.getItem('aiBookingDraft') || "");
     const [status, setStatus] = useState("idle");
     const [responseMsg, setResponseMsg] = useState("");
     const [documentId, setDocumentId] = useState("");
     const [bookingData, setBookingData] = useState(null);
     const [rawNote, setRawNote] = useState("");
+
+    // 2. Auto-save every time the prompt changes
+    useEffect(() => {
+        localStorage.setItem('aiBookingDraft', prompt);
+    }, [prompt]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,7 +24,7 @@ export default function AIBookingIntake() {
         setResponseMsg("");
         setDocumentId("");
         setBookingData(null);
-        setRawNote(prompt); // Save the original prompt to display at the bottom
+        setRawNote(prompt);
 
         try {
             const response = await fetch("https://us-west2-amaze-and-wonder-2026.cloudfunctions.net/processBookingIntake", {
@@ -45,6 +41,7 @@ export default function AIBookingIntake() {
                 setDocumentId(data.documentId);
                 setBookingData(data.data);
                 setPrompt("");
+                localStorage.removeItem('aiBookingDraft');
             } else {
                 setStatus("error");
                 setResponseMsg(data.error || "Failed to process the request.");
@@ -56,34 +53,34 @@ export default function AIBookingIntake() {
     };
 
     return (
-        <div style={{ padding: '2rem', background: '#1a1a1a', borderRadius: '12px', border: '2px dashed #333', margin: '2rem auto', maxWidth: '750px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        <div className="p-8 bg-[#1a1a1a] rounded-xl border-2 border-dashed border-[#333] my-8 mx-auto max-w-3xl font-sans">
 
             {/* HEADER */}
-            <h3 style={{ marginTop: 0, color: '#EAB308', fontSize: '1.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 className="mt-0 text-[#EAB308] text-2xl flex items-center gap-2 mb-2 font-bold">
                 🧪 Beta: AI Event Booking Intake
             </h3>
-            <p style={{ fontSize: '1rem', color: '#D1D5DB', marginBottom: '4px' }}>
+            <p className="text-base text-gray-300 mb-1">
                 Type a natural sentence to begin the intake process.
             </p>
-            <p style={{ fontSize: '0.95rem', color: '#D1D5DB', marginTop: 0, marginBottom: '1.5rem' }}>
-                <strong>Example:</strong> I need a corporate show for 50 people on October 31st. My name is Marie.
+            <p className="text-sm text-gray-400 mt-0 mb-6">
+                <strong className="text-gray-300">Example:</strong> I need a corporate show for 50 people on October 31st.  You can reach me at myName@domainName.com or call me at xxx, my name is Marie.
             </p>
 
             {/* INPUT FORM */}
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <textarea
                     rows="3"
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe the event details here..."
-                    style={{ padding: '1rem', borderRadius: '6px', border: '1px solid #ced4da', fontFamily: 'inherit', fontSize: '1rem', resize: 'vertical' }}
+                    className="w-full p-4 rounded-md border border-[#444] bg-[#262626] text-white placeholder-gray-500 focus:border-[#EAB308] focus:ring-1 focus:ring-[#EAB308] outline-none resize-y transition-colors"
                     disabled={status === "loading"}
                 />
 
                 <button
                     type="submit"
                     disabled={status === "loading" || !prompt.trim()}
-                    style={{ padding: '0.85rem', background: '#000', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '600', fontSize: '1rem', transition: 'background 0.2s' }}
+                    className="p-3.5 bg-black text-white border border-[#333] rounded-md font-semibold text-base transition-colors hover:bg-[#333] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {status === "loading" ? "Processing with Gemini..." : "Submit to AI ⚙️"}
                 </button>
@@ -91,33 +88,40 @@ export default function AIBookingIntake() {
 
             {/* SUCCESS MESSAGE */}
             {status === "success" && (
-                <div style={{ marginTop: '1.5rem', padding: '1rem 1.25rem', borderRadius: '6px', backgroundColor: '#d4edda', color: '#155724', border: '1px solid #c3e6cb', display: 'flex', alignItems: 'center' }}>
+                <div className="mt-6 p-4 rounded-md bg-[#022c22] text-[#34d399] border border-[#065f46] flex items-center">
                     {responseMsg} Document ID: {documentId}
+                </div>
+            )}
+
+            {/* ERROR MESSAGE */}
+            {status === "error" && (
+                <div className="mt-6 p-4 rounded-md bg-[#450a0a] text-[#f87171] border border-[#991b1b] flex items-center">
+                    {responseMsg}
                 </div>
             )}
 
             {/* EXTRACTED DETAILS CARD */}
             {bookingData && (
-                <div style={{ marginTop: '1.5rem', padding: '1.5rem', background: '#262626', borderRadius: '8px', border: '1px solid #333', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-                    <h4 style={{ margin: '0 0 1rem 0', color: '#ffffff', fontSize: '1.2rem', borderBottom: '1px solid #444', paddingBottom: '0.75rem' }}>
+                <div className="mt-6 p-6 bg-[#262626] rounded-lg border border-[#333] shadow-sm">
+                    <h4 className="m-0 mb-4 text-white text-lg border-b border-[#444] pb-3 font-bold">
                         Extracted Details
                     </h4>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1.05rem', color: '#D1D5DB' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><User size={18} /> <strong>Client Name:</strong> {bookingData.clientName}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Mail size={18} /> <strong>Email:</strong> {bookingData.clientEmail}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Phone size={18} /> <strong>Phone Number:</strong> {bookingData.clientPhone}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Briefcase size={18} /> <strong>Event Name:</strong> {bookingData.eventTitle}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Tag size={18} /> <strong>Event Type:</strong> {bookingData.eventType}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Users size={18} /> <strong>Audience Size:</strong> {bookingData.eventSize}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Calendar size={18} /> <strong>Date:</strong> {bookingData.eventDate}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Clock size={18} /> <strong>Time:</strong> {bookingData.eventTime}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><Building2 size={18} /> <strong>Venue:</strong> {bookingData.eventVenueName}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}><MapPin size={18} /> <strong>Address:</strong> {bookingData.eventVenueAddress}</div>
+                    <div className="flex flex-col gap-3 text-base text-gray-300">
+                        <div className="flex items-center gap-2"><User size={18} className="text-[#EAB308]" /> <strong className="text-white">Client Name:</strong> {bookingData.clientName}</div>
+                        <div className="flex items-center gap-2"><Mail size={18} className="text-[#EAB308]" /> <strong className="text-white">Email:</strong> {bookingData.clientEmail}</div>
+                        <div className="flex items-center gap-2"><Phone size={18} className="text-[#EAB308]" /> <strong className="text-white">Phone Number:</strong> {bookingData.clientPhone}</div>
+                        <div className="flex items-center gap-2"><Briefcase size={18} className="text-[#EAB308]" /> <strong className="text-white">Event Name:</strong> {bookingData.eventTitle}</div>
+                        <div className="flex items-center gap-2"><Tag size={18} className="text-[#EAB308]" /> <strong className="text-white">Event Type:</strong> {bookingData.eventType}</div>
+                        <div className="flex items-center gap-2"><Users size={18} className="text-[#EAB308]" /> <strong className="text-white">Audience Size:</strong> {bookingData.eventSize}</div>
+                        <div className="flex items-center gap-2"><Calendar size={18} className="text-[#EAB308]" /> <strong className="text-white">Date:</strong> {bookingData.eventDate}</div>
+                        <div className="flex items-center gap-2"><Clock size={18} className="text-[#EAB308]" /> <strong className="text-white">Time:</strong> {bookingData.eventTime}</div>
+                        <div className="flex items-center gap-2"><Building2 size={18} className="text-[#EAB308]" /> <strong className="text-white">Venue:</strong> {bookingData.eventVenueName}</div>
+                        <div className="flex items-center gap-2"><MapPin size={18} className="text-[#EAB308]" /> <strong className="text-white">Address:</strong> {bookingData.eventVenueAddress}</div>
                     </div>
 
-                    <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px dashed #ccc', color: '#495057', fontSize: '0.95rem' }}>
-                        <strong>Raw note:</strong> {rawNote}
+                    <div className="mt-6 pt-4 border-t border-dashed border-[#444] text-gray-400 text-sm">
+                        <strong className="text-gray-300">Raw note:</strong> {rawNote}
                     </div>
                 </div>
             )}

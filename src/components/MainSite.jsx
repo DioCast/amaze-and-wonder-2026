@@ -86,38 +86,6 @@ export default function MainSite() {
 
     // Check the URL for feature and admin flags
     const queryParams = new URLSearchParams(window.location.search);
-    const showBetaPortal = queryParams.get("beta") === "active";
-
-    // Safely intercept the render to display the unified beta portal
-    if (showBetaPortal) {
-        return (
-            <div style={{ minHeight: '100vh', backgroundColor: '#232121', color: '#FFFFFF', paddingTop: '100px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-
-                {/* Persistent Navigation & Logo */}
-                <nav style={{ position: 'fixed', top: 0, width: '100%', zIndex: 50, backgroundColor: 'rgba(0,0,0,0.95)', padding: '0.75rem 0', borderBottom: '1px solid #333' }}>
-                    <div className="nav-container">
-                        <img src="/images/logo.png" alt="Amaze And Wonder" style={{ height: '75px', width: 'auto' }} />
-                        <span className="forum" style={{ color: '#EAB308', fontSize: '1.25rem', fontWeight: 'bold' }}>Beta Portal</span>
-                    </div>
-                </nav>
-
-                {/* Stacked Components Container */}
-                <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '4rem' }}>
-
-                    <section>
-                        <h2 className="forum" style={{ fontSize: '2.5rem', color: '#FFFFFF', marginBottom: '1rem' }}>AI Intake Engine</h2>
-                        <AIBookingIntake />
-                    </section>
-
-                    <section>
-                        <h2 className="forum" style={{ fontSize: '2.5rem', color: '#FFFFFF', marginBottom: '1rem' }}>Live Pipeline</h2>
-                        <EventsPipelineDashboard />
-                    </section>
-
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div style={{ minHeight: '100vh', backgroundColor: '#232121', color: '#FFFFFF' }}>

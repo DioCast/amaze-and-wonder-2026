@@ -5,33 +5,44 @@ export default function OtherDetailsControls({
     ticketURL, setTicketURL,
     eventOverview, setEventOverview
 }) {
-    const inputStyle = { width: '100%', padding: '0.5rem 0.75rem', fontSize: '0.875rem', border: '1px solid #444', backgroundColor: '#1a1a1a', color: '#FFFFFF', borderRadius: '0.25rem', outline: 'none', marginTop: '0.25rem' };
-    const labelStyle = { display: 'block', fontSize: '0.75rem', fontWeight: '600', color: '#D1D5DB', textTransform: 'uppercase' };
-
     return (
-        <div style={{ padding: '1rem', marginBottom: '1.5rem', backgroundColor: '#262626', border: '1px solid #333', borderRadius: '0.375rem', boxShadow: '0 1px 2px rgba(0,0,0,0.2)' }}>
-            <h3 style={{ marginBottom: '1rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #444', paddingBottom: '0.5rem' }}>
+        <div className="p-4 mb-6 bg-[#262626] border border-[#333] rounded-md shadow-sm">
+            <h3 className="mb-4 text-xs font-bold text-white uppercase tracking-wider border-b border-[#444] pb-2">
                 Other Details
             </h3>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
+            <div className="space-y-4">
                 <div>
-                    <label style={labelStyle}>Image URL</label>
-                    <input type="url" value={imageURL} onChange={(e) => setImageURL(e.target.value)} style={inputStyle} placeholder="https://..." />
+                    <label className="block text-xs font-semibold text-gray-300 uppercase mb-1">Image URL</label>
+                    <input
+                        type="url"
+                        value={imageURL}
+                        onChange={(e) => setImageURL(e.target.value)}
+                        className="w-full py-2 px-3 text-sm border border-[#444] bg-[#1a1a1a] text-white rounded outline-none focus:border-[#EAB308] focus:ring-1 focus:ring-[#EAB308] transition-colors"
+                        placeholder="https://..."
+                    />
                 </div>
+
                 <div>
-                    <label style={labelStyle}>Ticket URL</label>
-                    <input type="url" value={ticketURL} onChange={(e) => setTicketURL(e.target.value)} style={inputStyle} placeholder="https://..." />
+                    <label className="block text-xs font-semibold text-gray-300 uppercase mb-1">Ticket URL</label>
+                    <input
+                        type="url"
+                        value={ticketURL}
+                        onChange={(e) => setTicketURL(e.target.value)}
+                        className="w-full py-2 px-3 text-sm border border-[#444] bg-[#1a1a1a] text-white rounded outline-none focus:border-[#EAB308] focus:ring-1 focus:ring-[#EAB308] transition-colors"
+                        placeholder="https://..."
+                    />
                 </div>
+
                 <div>
-                    <label style={labelStyle}>Event Overview</label>
+                    <label className="block text-xs font-semibold text-gray-300 uppercase mb-1">Event Overview</label>
                     <textarea
-                        rows="3"
+                        rows="4"
                         value={eventOverview}
                         onChange={(e) => setEventOverview(e.target.value)}
-                        style={{ ...inputStyle, resize: 'vertical' }}
-                        placeholder="Summary for poster recreation..."
-                    ></textarea>
+                        className="w-full py-2 px-3 text-sm border border-[#444] bg-[#1a1a1a] text-white rounded outline-none focus:border-[#EAB308] focus:ring-1 focus:ring-[#EAB308] transition-colors resize-y"
+                        placeholder="Brief description of the event..."
+                    />
                 </div>
             </div>
         </div>

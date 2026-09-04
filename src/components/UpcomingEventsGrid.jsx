@@ -10,51 +10,36 @@ export default function UpcomingEventsGrid() {
     useEffect(() => {
         const fetchUpcomingEvents = async () => {
             try {
-                // The index should be built by now, so we can re-enable the exact filters and limit to 3 items
                 const q = query(
                     collection(db, 'bookings'),
-                    // where('eventStatus', '==', 'Confirmed'),
+                    where('eventStatus', '==', 'Confirmed'),
                     orderBy('eventDate', 'asc'),
                     limit(3)
                 );
                 const snapshot = await getDocs(q);
-
-                const fetchedEvents = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-
-                setEvents(fetchedEvents);
+                setEvents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
             } catch (err) {
                 console.error("Error fetching events:", err);
             } finally {
                 setIsLoading(false);
             }
         };
-
         fetchUpcomingEvents();
     }, []);
 
     return (
-        <div style={{ width: '100%', maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem', boxSizing: 'border-box' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #333', marginBottom: '1.5rem', paddingBottom: '0.75rem' }}>
-                <h1 className="forum" style={{ fontSize: '2rem', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>
-                    Upcoming Events
-                </h1>
-            </div>
+        <div className="w-full text-white">
+            <h2 className="forum text-3xl font-bold mb-6 border-b border-[#333] pb-3">
+                Upcoming Events
+            </h2>
 
             {isLoading ? (
-                <div style={{ textAlign: 'center', color: '#9ca3af', padding: '2.5rem 0' }}>Loading upcoming events...</div>
+                <div className="text-center text-gray-400 py-10">Loading upcoming events...</div>
             ) : events.length === 0 ? (
-                <div style={{ textAlign: 'center', color: '#6b7280', padding: '2.5rem 0' }}>No upcoming events currently scheduled.</div>
+                <div className="text-center text-gray-500 py-10">No upcoming events currently scheduled.</div>
             ) : (
-                <div style={{
-                    display: 'grid',
-                    // Forces a 3-column layout by defining exactly 3 equal fractions
-                    gridTemplateColumns: 'repeat(3, 1fr)',
-                    gap: '1.5rem',
-                    alignItems: 'stretch'
-                }}>
+                /* Mobile: 1 col, Tablet: 2 cols, Desktop: 3 cols */
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                     {events.map(event => (
                         <EventCard key={event.id} event={event} />
                     ))}
