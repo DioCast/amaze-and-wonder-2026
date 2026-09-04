@@ -1,0 +1,29 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore } from "firebase/firestore"; // Added Firestore import
+import { getAuth } from "firebase/auth";
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyAjw8X12oWWFcbgFsTLT90vNh3x_7-fALk",
+  authDomain: "amaze-and-wonder-2026.firebaseapp.com",
+  projectId: "amaze-and-wonder-2026",
+  storageBucket: "amaze-and-wonder-2026.firebasestorage.app",
+  messagingSenderId: "89295970624",
+  appId: "1:89295970624:web:9cb6d060c2d3668e5a5aa5",
+  measurementId: "G-WYMHQZWGFK"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+// Initialize and export Firestore for your dashboard to use
+export const db = getFirestore(app);
+
+// Intialize and export Auth for your dashboard to use
+export const auth = getAuth(app);
