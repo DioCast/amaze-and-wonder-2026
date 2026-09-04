@@ -24,70 +24,65 @@ const formatEventDateTime = (dateStr, timeStr) => {
 };
 
 export default function EventCard({ event }) {
-    const { imageURL, eventTitle, eventVenueName, eventDate, eventTime, eventOverview, ticketURL } = event;
+    // 1. Added ticketPrice to the destructuring assignment
+    const { imageURL, eventTitle, eventVenueName, eventDate, eventTime, eventOverview, ticketURL, ticketPrice } = event;
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#2a2828', borderRadius: '12px', border: '1px solid #444', overflow: 'hidden', width: '100%', height: '100%', boxShadow: '0 4px 6px rgba(0,0,0,0.3)' }}>
+        <div className="flex flex-col bg-[#2a2828] rounded-xl border border-[#444] overflow-hidden w-full h-full shadow-md">
 
             {/* 16:9 Landscape Image Container */}
-            <div style={{ width: '100%', aspectRatio: '16/9', backgroundColor: '#1a1a1a', position: 'relative', flexShrink: 0 }}>
+            <div className="w-full aspect-[16/9] bg-[#1a1a1a] relative shrink-0">
                 {imageURL ? (
                     <img
                         src={imageURL}
                         alt={eventTitle}
-                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                        className="absolute inset-0 w-full h-full object-cover"
                     />
                 ) : (
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', color: '#6b7280', fontSize: '0.875rem', fontWeight: 500 }}>
+                    <div className="flex items-center justify-center w-full h-full text-gray-500 text-sm font-medium">
                         No Image Available
                     </div>
                 )}
             </div>
 
             {/* Card Text Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '1.25rem' }}>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 'bold', color: '#ffffff', lineHeight: 1.2, margin: '0 0 0.5rem 0' }}>
+            <div className="flex flex-col flex-1 p-5">
+                <h3 className="text-[1.15rem] font-bold text-white leading-tight mb-2">
                     {eventTitle || 'Event Title TBD'}
                 </h3>
 
-                <div style={{ marginBottom: '0.75rem' }}>
-                    <p style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#e5e7eb', margin: '0 0 0.25rem 0' }}>
+                <div className="mb-3">
+                    <p className="text-[0.95rem] font-bold text-gray-200 mb-1">
                         {formatEventDateTime(eventDate, eventTime)}
                     </p>
-                    <p style={{ fontSize: '0.875rem', fontWeight: 500, color: '#9ca3af', margin: 0 }}>
+                    <p className="text-sm font-medium text-gray-400">
                         {eventVenueName || 'Venue TBD'}
                     </p>
                 </div>
 
-                <p style={{ fontSize: '0.875rem', color: '#d1d5db', marginBottom: '1.5rem', flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {/* line-clamp-3 automatically handles the text truncation with an ellipsis */}
+                <p className="text-sm text-gray-300 mb-6 line-clamp-3">
                     {eventOverview || 'No description provided.'}
                 </p>
 
-                {/* Ticket Button */}
-                <div style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
-                    <a
-                        href={ticketURL || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            display: 'block',
-                            width: '100%',
-                            textAlign: 'center',
-                            padding: '0.625rem 1rem',
-                            borderRadius: '8px',
-                            fontWeight: 600,
-                            fontSize: '0.875rem',
-                            textDecoration: 'none',
-                            backgroundColor: ticketURL ? '#EAB308' : '#333',
-                            color: ticketURL ? '#000000' : '#6b7280',
-                            cursor: ticketURL ? 'pointer' : 'not-allowed',
-                            boxSizing: 'border-box'
-                        }}
-                        onClick={(e) => !ticketURL && e.preventDefault()}
-                    >
-                        {ticketURL ? 'Get Tickets' : 'Tickets Unavailable'}
-                    </a>
-                </div>
+                {/* Ticket Info & Button (Conditionally Rendered) */}
+                {ticketURL && (
+                    <div className="mt-auto pt-2">
+                        <div className="text-sm font-bold text-white mb-2">
+                            {Number(ticketPrice) > 0
+                                ? `From $${Number(ticketPrice).toFixed(2)}`
+                                : 'From $TBD'}
+                        </div>
+                        <a
+                            href={ticketURL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block w-full text-center py-2.5 px-4 rounded-lg font-semibold text-sm bg-[#EAB308] text-black hover:bg-yellow-400 transition-colors"
+                        >
+                            Get Tickets
+                        </a>
+                    </div>
+                )}
             </div>
         </div>
     );

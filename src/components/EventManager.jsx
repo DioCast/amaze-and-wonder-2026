@@ -40,6 +40,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
   // Other Details State (passed down to OtherDetailsControls as props)
   const [imageURL, setImageURL] = useState(eventData?.imageURL || '');
   const [ticketURL, setTicketURL] = useState(eventData?.ticketURL || '');
+  const [ticketPrice, setTicketPrice] = useState(eventData?.ticketPrice || '');
   const [eventOverview, setEventOverview] = useState(eventData?.eventOverview || '');
 
   useEffect(() => {
@@ -62,6 +63,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
       setIsDepositSatisfied(eventData.isDepositSatisfied || false);
       setImageURL(eventData.imageURL || '');
       setTicketURL(eventData.ticketURL || '');
+      setTicketPrice(eventData?.ticketPrice || '');
       setEventOverview(eventData.eventOverview || '');
       // Load the draft for this specific event ID, or default to empty string
       setAuditNote(localStorage.getItem(`auditNote_${eventData.id}`) || ''); // Clears the audit note for the new record
@@ -86,86 +88,88 @@ export default function EventManager({ isOpen, onClose, eventData }) {
     }
   }, [isOpen]);
 
-  // 2. Early return strictly AFTER hooks
+  // Early return strictly AFTER hooks
   if (!isOpen || !eventData) return null;
 
+  // Get Active User Info.  Falls back to 'Admin' if Firebase Auth isn't active on this demo yet
+  let activeUser = 'Admin';
+  try {
+    // Capture the Active User
+    if (auth && auth.currentUser) {
+      if (auth.currentUser.displayName) {
+        activeUser = auth.currentUser.displayName;
+      } else if (auth.currentUser.email) {
+        // Isolates the prefix before the @ symbol
+        const emailPrefix = auth.currentUser.email.split('@')[0];
 
-  // 3. The Handler Function
+        // Splits by periods, capitalizes each word, and joins with a space
+        activeUser = emailPrefix
+          .split('.')
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(' ');
+      }
+    }
+  } catch (authError) {
+    console.warn("Firebase Auth error. Defaulting to 'Admin'.");
+  }
+
+  // Detect Changes (Change Data Capture)
+  const changes = [];
+  // Core Status
+  if (eventStatus !== (eventData.eventStatus || 'Pending')) changes.push(`Status to "${eventStatus}"`);
+  // Client Contact
+  if (clientName !== (eventData.clientName || '' || 'Unknown')) changes.push(`Contact Name to "${clientName}"`);
+  if (clientPhone !== (eventData.clientPhone || '' || 'Unknown')) changes.push(`Contact Phone to "${clientPhone}"`);
+  if (clientEmail !== (eventData.clientEmail || '' || 'Unknown')) changes.push(`Contact Email to "${clientEmail}"`);
+  // Event Details
+  if (eventTitle !== (eventData.eventTitle || '' || 'TBD')) changes.push(`Event Title to "${eventTitle}"`);
+  if (eventType !== (eventData.eventType || '')) changes.push(`Event Type to "${eventType}"`);
+  if (eventDate !== (eventData.eventDate || '' || 'TBD')) changes.push(`Event Date to "${eventDate}"`);
+  if (eventTime !== (eventData.eventTime || '' || 'TBD')) changes.push(`Event Time to "${eventTime}"`);
+  if (Number(eventSize) !== (eventData.eventSize || 0)) changes.push(`Event Size to "${eventSize}"`);
+  if (eventVenueName !== (eventData.eventVenueName || '')) changes.push(`Venue to "${eventVenueName}"`);
+  if (eventVenueAddress !== (eventData.eventVenueAddress || '')) changes.push(`Venue Address to "${eventVenueAddress}"`);
+  // Financials (Change Tracker)
+  if (Number(quotedPrice) !== (eventData.eventQuotePrice || 0)) changes.push(`Quoted Price to $${quotedPrice}`);
+  if (Number(agreedPrice) !== (eventData.eventAgreedPrice || 0)) changes.push(`Agreed Price to $${agreedPrice}`);
+
+  // Dynamic Paid Balance Tracker
+  const oldPaidBalance = eventData.eventPaidBalance || 0;
+  const newPaidBalance = Number(paidBalance) || 0;
+
+  if (newPaidBalance !== oldPaidBalance) {
+    const difference = newPaidBalance - oldPaidBalance;
+    const currentAgreedPrice = Number(agreedPrice) || 0;
+    const remainingBalance = currentAgreedPrice - newPaidBalance;
+
+    const actionVerb = difference >= 0 ? "added" : "deducted";
+    changes.push(`${actionVerb} $${Math.abs(difference)} to paid balance, new paid balance is $${newPaidBalance}, remaining balance is $${remainingBalance}`);
+  }
+
+  if (Number(depositRequired) !== (eventData.eventDeposit || 0)) changes.push(`Deposit Required to $${depositRequired}`);
+  if (isDepositSatisfiedChecked !== (eventData.isDepositSatisfied || false)) changes.push(`IsDepositSatisfied to ${isDepositSatisfiedChecked}`);
+  // Other Details
+  if (imageURL !== (eventData.imageURL || '')) changes.push(`Image URL to "${imageURL}"`);
+  if (ticketURL !== (eventData.ticketURL || '')) changes.push(`Ticket URL to "${ticketURL}"`);
+  if (Number(ticketPrice) !== (eventData.ticketPrice || 0)) changes.push(`Ticket Price to $${ticketPrice}`);
+  if (eventOverview !== (eventData.eventOverview || '')) changes.push(`Overview to "${eventOverview}"`);
+  // You can replicate the 'if' statement above for any other fields you want tracked strictly.
+
+  // Format the Final Audit String
+  const systemLog = changes.length > 0
+    ? `Updated ${changes.join(', ')}.`
+    : '';
+
+  const finalAuditNote = auditNote.trim()
+    ? `${systemLog} | User Note: "${auditNote.trim()}"`
+    : systemLog;
+
+  // The Save Handler Function
   const handleSaveUpdate = async () => {
     try {
-      // Falls back to 'Admin' if Firebase Auth isn't active on this demo yet
-      let activeUser = 'Admin';
-      try {
-        // Capture the Active User
-        if (auth && auth.currentUser) {
-          if (auth.currentUser.displayName) {
-            activeUser = auth.currentUser.displayName;
-          } else if (auth.currentUser.email) {
-            // Isolates the prefix before the @ symbol
-            const emailPrefix = auth.currentUser.email.split('@')[0];
 
-            // Splits by periods, capitalizes each word, and joins with a space
-            activeUser = emailPrefix
-              .split('.')
-              .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-              .join(' ');
-          }
-        }
-      } catch (authError) {
-        console.warn("Firebase Auth error. Defaulting to 'Admin'.");
-      }
 
-      // 1. Detect Changes (Change Data Capture)
-      const changes = [];
-      // 1. Core Status
-      if (eventStatus !== (eventData.eventStatus || 'Pending')) changes.push(`Status to "${eventStatus}"`);
-      // 2. Client Contact
-      if (clientName !== (eventData.clientName || '' || 'Unknown')) changes.push(`Contact Name to "${clientName}"`);
-      if (clientPhone !== (eventData.clientPhone || '' || 'Unknown')) changes.push(`Contact Phone to "${clientPhone}"`);
-      if (clientEmail !== (eventData.clientEmail || '' || 'Unknown')) changes.push(`Contact Email to "${clientEmail}"`);
-      // 3. Event Details
-      if (eventTitle !== (eventData.eventTitle || '' || 'TBD')) changes.push(`Event Title to "${eventTitle}"`);
-      if (eventType !== (eventData.eventType || '')) changes.push(`Event Type to "${eventType}"`);
-      if (eventDate !== (eventData.eventDate || '' || 'TBD')) changes.push(`Event Date to "${eventDate}"`);
-      if (eventTime !== (eventData.eventTime || '' || 'TBD')) changes.push(`Event Time to "${eventTime}"`);
-      if (Number(eventSize) !== (eventData.eventSize || 0)) changes.push(`Event Size to "${eventSize}"`);
-      if (eventVenueName !== (eventData.eventVenueName || '')) changes.push(`Venue to "${eventVenueName}"`);
-      if (eventVenueAddress !== (eventData.eventVenueAddress || '')) changes.push(`Venue Address to "${eventVenueAddress}"`);
-      // 4. Financials (Change Tracker)
-      if (Number(quotedPrice) !== (eventData.eventQuotePrice || 0)) changes.push(`Quoted Price to $${quotedPrice}`);
-      if (Number(agreedPrice) !== (eventData.eventAgreedPrice || 0)) changes.push(`Agreed Price to $${agreedPrice}`);
-
-      // Dynamic Paid Balance Tracker
-      const oldPaidBalance = eventData.eventPaidBalance || 0;
-      const newPaidBalance = Number(paidBalance) || 0;
-
-      if (newPaidBalance !== oldPaidBalance) {
-        const difference = newPaidBalance - oldPaidBalance;
-        const currentAgreedPrice = Number(agreedPrice) || 0;
-        const remainingBalance = currentAgreedPrice - newPaidBalance;
-
-        const actionVerb = difference >= 0 ? "added" : "deducted";
-        changes.push(`${actionVerb} $${Math.abs(difference)} to paid balance, new paid balance is $${newPaidBalance}, remaining balance is $${remainingBalance}`);
-      }
-
-      if (Number(depositRequired) !== (eventData.eventDeposit || 0)) changes.push(`Deposit Required to $${depositRequired}`);
-      if (isDepositSatisfiedChecked !== (eventData.isDepositSatisfied || false)) changes.push(`IsDepositSatisfied to ${isDepositSatisfiedChecked}`);
-      // 5. Other Details
-      if (imageURL !== (eventData.imageURL || '')) changes.push(`Image URL to "${imageURL}"`);
-      if (ticketURL !== (eventData.ticketURL || '')) changes.push(`Ticket URL to "${ticketURL}"`);
-      if (eventOverview !== (eventData.eventOverview || '')) changes.push(`Overview to "${eventOverview}"`);
-      // You can replicate the 'if' statement above for any other fields you want tracked strictly.
-
-      // 2. Format the Final Audit String
-      const systemLog = changes.length > 0
-        ? `Updated ${changes.join(', ')}.`
-        : 'Record saved with no tracked changes.';
-
-      const finalAuditNote = auditNote.trim()
-        ? `${systemLog} | User Note: "${auditNote.trim()}"`
-        : systemLog;
-
-      // 3. Execute Database Write
+      // Execute Database Write
       // Targets 'bookings' to match your EventsPipelineDashboard listener
       const eventRef = doc(db, 'bookings', eventData.id);
 
@@ -194,6 +198,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
         // 5. Other Details
         imageURL: imageURL,
         ticketURL: ticketURL,
+        ticketPrice: Number(ticketPrice),
         eventOverview: eventOverview,
         // 6. System Data
         lastModified: new Date(),
@@ -296,6 +301,7 @@ export default function EventManager({ isOpen, onClose, eventData }) {
             <OtherDetailsControls
               imageURL={imageURL} setImageURL={setImageURL}
               ticketURL={ticketURL} setTicketURL={setTicketURL}
+              ticketPrice={ticketPrice} setTicketPrice={setTicketPrice}
               eventOverview={eventOverview} setEventOverview={setEventOverview}
             />
           </div>
@@ -388,7 +394,12 @@ export default function EventManager({ isOpen, onClose, eventData }) {
               <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-gray-300 bg-transparent border border-[#444] rounded hover:bg-[#262626] transition-colors">
                 Cancel
               </button>
-              <button onClick={handleSaveUpdate} className="px-4 py-2 text-sm font-medium text-black bg-[#EAB308] rounded hover:bg-yellow-400 transition-colors">
+              <button onClick={handleSaveUpdate}
+                disabled={!finalAuditNote}
+                className={`px-4 py-2 text-sm font-medium rounded transition-colors ${finalAuditNote
+                  ? 'bg-[#EAB308] text-black hover:bg-yellow-400'
+                  : 'bg-[#333] text-gray-500 cursor-not-allowed'
+                  }`}>
                 Save & Update
               </button>
             </div>
